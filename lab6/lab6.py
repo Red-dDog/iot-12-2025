@@ -1,35 +1,45 @@
+"""labotatorna 6"""
 import os
 import logging
 import functools
 import json
 
-mode = "file"
+mode = "console"
 
 class FileNotFound(OSError):
-    pass
+    """
+    Клас ексепшену файл незнайдено
+    """
 
 class FileCorrupted(OSError):
-    pass
+    """
+    Клас ексепшену для файл пошкоджено
+    """
 
-def logged(exception, mode):
+def logged(exception, reprt_mode):
+    """
+    Функція-декоратор яка приймає 2 аргументи та дадає функцію логування
+    """
     def inner(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
             except exception as e:
-                if mode == "console":
+                if reprt_mode == "console":
                     logging.error(f"Logged Error: {e}")
-                elif mode == "file":
-                    logging.basicConfig(filename='logs.txt', level=logging.ERROR, format='%(asctime)s %(message)s')
+                elif reprt_mode == "file":
+                    logging.basicConfig(filename='logs.txt', level=logging.ERROR,
+                                         format='%(asctime)s %(message)s')
                     logging.exception(f"Exception occurred: {e}")
-                raise 
+                raise
         return wrapper
     return inner
 
 class Changer:
-    """Клас для роботи з JSON файлом"""
-    
+    """
+    Клас для роботи з Файлом формата JSON
+    """
     @logged(FileNotFound, mode)
     def __init__(self, file_name, path_to_file):
         self.file_name = file_name
@@ -41,8 +51,11 @@ class Changer:
 
     @logged(FileCorrupted, mode)
     def write_to_file(self, data):
+        """
+        Метод додавання до файлу
+        """
         try:
-            with open(self.full_path, "r") as f:
+            with open(self.full_path, "r", encoding='utf-8') as f:
                 try:
                     existing_data = json.load(f)
                 except json.JSONDecodeError:
@@ -52,7 +65,7 @@ class Changer:
                 existing_data = [existing_data]
 
             existing_data.append(data)
-            with open(self.full_path, "w") as f:
+            with open(self.full_path, "w", encoding='utf-8') as f:
                 json.dump(existing_data, f, indent=4)
 
         except OSError as e:
@@ -60,13 +73,16 @@ class Changer:
 
     @logged(FileCorrupted, mode)
     def read_from_file(self):
+        """
+        Метод читання з класу
+        """
         try:
-            with open(self.full_path, "r") as f:
+            with open(self.full_path, "r", encoding='utf-8') as f:
                 return json.load(f)
         except (OSError, json.JSONDecodeError) as e:
             raise FileCorrupted(f"Failed to read '{self.file_name}'") from e
 
 
-file1 = Changer("lab5file.json", "")
+file1 = Changer("lab6file.json", "")
 
 file1.write_to_file({"id": 22, "test": "data"})
