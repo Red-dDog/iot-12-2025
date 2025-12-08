@@ -1,0 +1,24 @@
+2025-12-01 13:45:10,495 Exception occurred: File 'lab5file.json' not found at initialization.
+Traceback (most recent call last):
+  File "c:\Users\адмін\Desktop\lab6\venv\lab6.py", line 19, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\адмін\Desktop\lab6\venv\lab6.py", line 45, in __init__
+    raise FileNotFound(f"File '{self.file_name}' not found at initialization.")
+FileNotFound: File 'lab5file.json' not found at initialization.
+2025-12-01 13:51:08,950 Exception occurred: File 'lab5file.json' not found
+Traceback (most recent call last):
+  File "c:\Users\адмін\Desktop\lab6\venv\lab6.py", line 19, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\адмін\Desktop\lab6\venv\lab6.py", line 40, in __init__
+    raise FileNotFound(f"File '{self.file_name}' not found")
+FileNotFound: File 'lab5file.json' not found
+2025-12-06 01:47:40,598 Exception occurred: File 'lab5file.json' not found
+Traceback (most recent call last):
+  File "c:\Users\адмін\Desktop\моди\labs\lab6\venv\lab6.py", line 19, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\адмін\Desktop\моди\labs\lab6\venv\lab6.py", line 40, in __init__
+    raise FileNotFound(f"File '{self.file_name}' not found")
+FileNotFound: File 'lab5file.json' not found
