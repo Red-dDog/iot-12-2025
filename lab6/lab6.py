@@ -1,4 +1,4 @@
-"""labotatorna 6"""
+"""Laboratory work 6"""
 import os
 import logging
 import functools
@@ -8,17 +8,17 @@ mode = "console"
 
 class FileNotFound(OSError):
     """
-    Клас ексепшену файл незнайдено
+    Exception class for file not found.
     """
 
 class FileCorrupted(OSError):
     """
-    Клас ексепшену для файл пошкоджено
+    Exception class for corrupted file.
     """
 
 def logged(exception, reprt_mode):
     """
-    Функція-декоратор яка приймає 2 аргументи та дадає функцію логування
+    Decorator function that accepts 2 arguments and adds logging functionality.
     """
     def inner(func):
         @functools.wraps(func)
@@ -38,7 +38,7 @@ def logged(exception, reprt_mode):
 
 class Changer:
     """
-    Клас для роботи з Файлом формата JSON
+    Class for working with JSON files.
     """
     @logged(FileNotFound, mode)
     def __init__(self, file_name, path_to_file):
@@ -52,7 +52,7 @@ class Changer:
     @logged(FileCorrupted, mode)
     def write_to_file(self, data):
         """
-        Метод додавання до файлу
+        Method to append data to the file.
         """
         try:
             with open(self.full_path, "r", encoding='utf-8') as f:
@@ -74,7 +74,7 @@ class Changer:
     @logged(FileCorrupted, mode)
     def read_from_file(self):
         """
-        Метод читання з класу
+        Method to read from the file.
         """
         try:
             with open(self.full_path, "r", encoding='utf-8') as f:
