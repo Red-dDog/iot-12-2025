@@ -49,7 +49,7 @@ class Changer:
         if not os.path.exists(self.full_path):
             raise FileNotFound(f"File '{self.file_name}' not found")
 
-    @logged(FileCorrupted, mode)
+    @logged(FileCorrupted, mode) # adds logging in method
     def write_to_file(self, data):
         """
         Method to append data to the file.
@@ -71,7 +71,7 @@ class Changer:
         except OSError as e:
             raise FileCorrupted(f"Failed to write to '{self.file_name}'") from e
 
-    @logged(FileCorrupted, mode)
+    @logged(FileCorrupted, mode) # adds logging in method
     def read_from_file(self):
         """
         Method to read from the file.
