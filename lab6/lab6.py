@@ -1,35 +1,53 @@
+"""Laboratory work 6"""
 import os
 import logging
 import functools
 import json
 
-mode = "file"
+mode = "console"
+
 
 class FileNotFound(OSError):
-    pass
+    """
+    Exception class for file not found.
+    """
+
 
 class FileCorrupted(OSError):
-    pass
+    """
+    Exception class for corrupted file.
+    """
 
-def logged(exception, mode):
+
+def logged(exception, report_mode):
+    """
+    Decorator function that accepts 2 arguments and adds logging functionality.
+    """
     def inner(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
             except exception as e:
-                if mode == "console":
+                if report_mode == "console":
                     logging.error(f"Logged Error: {e}")
-                elif mode == "file":
-                    logging.basicConfig(filename='logs.txt', level=logging.ERROR, format='%(asctime)s %(message)s')
+                elif report_mode == "file":
+                    logging.basicConfig(
+                        filename='logs.txt', 
+                        level=logging.ERROR,
+                        format='%(asctime)s %(message)s'
+                    )
                     logging.exception(f"Exception occurred: {e}")
-                raise 
+                raise
         return wrapper
     return inner
 
+
 class Changer:
-    """Клас для роботи з JSON файлом"""
-    
+    """
+    Class for working with JSON files.
+    """
+
     @logged(FileNotFound, mode)
     def __init__(self, file_name, path_to_file):
         self.file_name = file_name
@@ -39,10 +57,13 @@ class Changer:
         if not os.path.exists(self.full_path):
             raise FileNotFound(f"File '{self.file_name}' not found")
 
-    @logged(FileCorrupted, mode)
+    @logged(FileCorrupted, mode)  # adds logging in method
     def write_to_file(self, data):
+        """
+        Method to append data to the file.
+        """
         try:
-            with open(self.full_path, "r") as f:
+            with open(self.full_path, "r", encoding='utf-8') as f:
                 try:
                     existing_data = json.load(f)
                 except json.JSONDecodeError:
@@ -52,21 +73,24 @@ class Changer:
                 existing_data = [existing_data]
 
             existing_data.append(data)
-            with open(self.full_path, "w") as f:
+            with open(self.full_path, "w", encoding='utf-8') as f:
                 json.dump(existing_data, f, indent=4)
 
         except OSError as e:
             raise FileCorrupted(f"Failed to write to '{self.file_name}'") from e
 
-    @logged(FileCorrupted, mode)
+    @logged(FileCorrupted, mode)  # adds logging in method
     def read_from_file(self):
+        """
+        Method to read from the file.
+        """
         try:
-            with open(self.full_path, "r") as f:
+            with open(self.full_path, "r", encoding='utf-8') as f:
                 return json.load(f)
         except (OSError, json.JSONDecodeError) as e:
             raise FileCorrupted(f"Failed to read '{self.file_name}'") from e
 
 
-file1 = Changer("lab5file.json", "")
-
-file1.write_to_file({"id": 22, "test": "data"})
+if __name__ == "__main__":
+    file1 = Changer("lab6file.json", "")
+    file1.write_to_file({"id": 22, "test": "data"})
